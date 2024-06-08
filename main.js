@@ -6,6 +6,36 @@ var typed = new Typed('.text', {
     loop: true
 });
 
+document.getElementById('contact-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const formData = new FormData(this);
+    const data = {
+        name: formData.get('name'),
+        // other form fields
+    };
+
+    fetch('https://formspree.io/YOUR_EMAIL_HERE', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => {
+        if (response.ok) {
+            alert('Email sent successfully!');
+            document.getElementById('contact-form').reset();
+        } else {
+            alert('Failed to send email. Please try again later.');
+        }
+    })
+    .catch(error => {
+        alert('An error occurred: ' + error.message);
+    });
+});
+
+
 const express = require('express');
 const nodemailer = require('nodemailer');
 const bodyParser = require('body-parser');
