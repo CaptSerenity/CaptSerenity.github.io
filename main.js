@@ -15,7 +15,7 @@ document.getElementById('contact-form').addEventListener('submit', function(even
         // other form fields
     };
 
-    fetch('https://formspree.io/YOUR_EMAIL_HERE', {
+    fetch('https://formspree.io/f/moqgogvq', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
