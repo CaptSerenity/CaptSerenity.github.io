@@ -1,108 +1,42 @@
-var typed = new Typed('.text', {
-    strings: ["Software Engineer.", "Data Scientist.", "AI Enthusiast."],
-    typeSpeed: 100,
-    backSpeed: 100,
-    backDelay: 2000,
-    loop: true
-});
-
-document.getElementById('contact-form').addEventListener('submit', function(event) {
-    event.preventDefault();
-
-    const formData = new FormData(this);
-    const data = {
-        name: formData.get('name'),
-        // other form fields
-    };
-
-    fetch('https://formspree.io/f/moqgogvq', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => {
-        if (response.ok) {
-            alert('Email sent successfully!');
-            document.getElementById('contact-form').reset();
-        } else {
-            alert('Failed to send email. Please try again later.');
-        }
-    })
-    .catch(error => {
-        alert('An error occurred: ' + error.message);
-    });
-});
-
-
 const express = require('express');
-const nodemailer = require('nodemailer');
 const bodyParser = require('body-parser');
+const nodemailer = require('nodemailer');
 const app = express();
 const port = 3000;
 
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(express.static('public')); // Ensure this line serves your static files
 
 app.post('/send-email', (req, res) => {
-    const { name, email, subject, message } = req.body;
+    const { name, email, message } = req.body;
 
-    // Configure your email transport
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            user: 'your-email@gmail.com',
-            pass: 'your-email-password'
-        }
+            user: 'cbenjamin0909',
+            pass: 'B@09091998',
+        },
     });
 
     const mailOptions = {
         from: email,
-        to: 'your-email@gmail.com',
-        subject: `New message from ${name}: ${subject}`,
-        text: message
+        to: 'recipient-email@example.com',
+        subject: `New message from ${name}`,
+        text: message,
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
-            return res.status(500).send('Error sending email: ' + error.message);
+            console.log(error);
+            res.status(500).send('Error sending email');
+        } else {
+            console.log('Email sent: ' + info.response);
+            res.send('Email sent successfully');
         }
-        res.send('Email sent successfully');
     });
 });
 
 app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}/`);
-});
-
-
-document.getElementById('contact-form').addEventListener('submit', function(event) {
-    event.preventDefault();
-
-    const formData = new FormData(this);
-    const data = {
-        name: formData.get('name'),
-        email: formData.get('email'),
-        subject: formData.get('subject'),
-        message: formData.get('message')
-    };
-
-    fetch('your-backend-endpoint', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => {
-        if (response.ok) {
-            alert('Email sent successfully!');
-            document.getElementById('contact-form').reset();
-        } else {
-            alert('Failed to send email. Please try again later.');
-        }
-    })
-    .catch(error => {
-        alert('An error occurred: ' + error.message);
-    });
+    console.log(`Server is running on http://localhost:${port}`);
 });
